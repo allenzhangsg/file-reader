@@ -367,12 +367,17 @@ export async function resolveRelativeAssets(
 
       const mime = guessMimeType(file.name);
       const blob = new Blob([await file.arrayBuffer()], { type: mime });
-      const blobUrl = URL.createObjectURL(blob);
-      assetBlobUrls.push(blobUrl);
+      
+      // Convert the blob to a base64 data URI so it works in a sandboxed (null-origin) iframe
+      const dataUri = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
 
       replacements.push({
         original: full,
-        replaced: `${prefix}${blobUrl}${suffix}`,
+        replaced: `${prefix}${dataUri}${suffix}`,
       });
     }),
   );
