@@ -34,7 +34,7 @@ const ContentViewer: React.FC<ContentViewerProps> = ({
         src={blobUrl}
         title={selectedFileName ?? 'File preview'}
         className="flex-1 w-full border-0 bg-white"
-        sandbox="allow-same-origin allow-popups"
+        sandbox="allow-same-origin allow-popups allow-scripts"
       />
     );
   }
